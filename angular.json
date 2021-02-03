@@ -5,11 +5,6 @@
   "projects": {
     "taskana-workplace": {
       "projectType": "application",
-      "schematics": {
-        "@schematics/angular:application": {
-          "strict": true
-        }
-      },
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
@@ -25,7 +20,7 @@
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
-            "aot": true,
+            "aot": false,
             "assets": [
               "src/favicon.ico",
               "src/assets"
@@ -50,6 +45,7 @@
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true,
+              "aot": true,
               "budgets": [
                 {
                   "type": "initial",
@@ -61,19 +57,22 @@
                   "maximumWarning": "2kb",
                   "maximumError": "4kb"
                 }
-              ]
+              ],
+              "extraWebpackConfig": "webpack.prod.config.js"
             }
           }
         },
         "serve": {
-          "builder": "@angular-builders/custom-webpack:dev-server",
+          "builder": "ngx-build-plus:dev-server",
           "options": {
             "browserTarget": "taskana-workplace:build",
-            "port": 1337
+            "port": 1337,
+            "extraWebpackConfig": "webpack.config.js"
           },
           "configurations": {
             "production": {
-              "browserTarget": "taskana-workplace:build:production"
+              "browserTarget": "taskana-workplace:build:production",
+              "extraWebpackConfig": "webpack.prod.config.js"
             }
           }
         },
@@ -84,7 +83,7 @@
           }
         },
         "test": {
-          "builder": "@angular-devkit/build-angular:karma",
+          "builder": "ngx-build-plus:karma",
           "options": {
             "main": "src/test.ts",
             "polyfills": "src/polyfills.ts",
@@ -97,7 +96,8 @@
             "styles": [
               "src/styles.css"
             ],
-            "scripts": []
+            "scripts": [],
+            "extraWebpackConfig": "webpack.config.js"
           }
         },
         "lint": {
