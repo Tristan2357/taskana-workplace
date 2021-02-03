@@ -1,15 +1,16 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import {TaskMasterComponent} from './task-master/task-master.component';
 
 const routes: Routes = [
   {
     path: '**',
-    loadChildren: () => import('./workplace/workplace.module').then((m) => m.WorkplaceModule)
+    component: TaskMasterComponent
   }
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class WorkplaceRoutingModule { }

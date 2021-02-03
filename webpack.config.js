@@ -20,8 +20,8 @@ module.exports = {
       name: "taskana_workplace",
       filename: "remoteEntry.js",
       exposes: {
-        './Module': './/src/app/app.module.ts',
-        './Component': './/src/app/app.component.ts'
+        //'./task_master': './/src/app/workplace/task-master/task-master.component.ts',
+        './Module': './/src/app/workplace/workplace.module.ts'
       },
 
         shared: {
