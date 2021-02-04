@@ -16,11 +16,5 @@
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
     "target": "es2015",
-  },
-  "angularCompilerOptions": {
-    "enableI18nLegacyMessageIdFormat": false,
-    "strictInjectionParameters": true,
-    "strictInputAccessModifiers": true,
-    "strictTemplates": true
   }
 }

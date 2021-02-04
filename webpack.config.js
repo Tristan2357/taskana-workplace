@@ -1,11 +1,7 @@
-const ModuleFederationPlugin = require("webpack/lib/container/ModuleFederationPlugin");
-const mf = require("@angular-architects/module-federation/webpack");
+const webpack = require("webpack");
+const ModuleFederationPlugin = require(
+  "webpack/lib/container/ModuleFederationPlugin");
 const path = require("path");
-
-const sharedMappings = new mf.SharedMappings();
-sharedMappings.register(
-  path.join(__dirname, 'tsconfig.json'),
-  [/* mapped paths to share */]);
 
 module.exports = {
   output: {
@@ -17,22 +13,19 @@ module.exports = {
   },
   plugins: [
     new ModuleFederationPlugin({
-      name: "taskana_workplace",
+      name: "mfeWorkplace",
+      library: { type: "var", name: "mfeWorkplace" },
       filename: "remoteEntry.js",
       exposes: {
-        //'./task_master': './/src/app/workplace/task-master/task-master.component.ts',
-        './Module': './/src/app/workplace/workplace.module.ts'
+        WorkplaceModule: ".//src/app/workplace/workplace.module.ts"
       },
 
-        shared: {
-          "@angular/core": { singleton: true, requiredVersion: "~11.1.0" },
-          "@angular/common": { singleton: true, requiredVersion: "~11.1.0" },
-          "@angular/router": { singleton: true, requiredVersion: "~11.1.0" },
-          "@angular/platform-browser": {},
-          ...sharedMappings.getDescriptors()
-        }
+      shared: {
+        "@angular/core": { eager: true, singleton: true },
+        "@angular/common": { eager: true, singleton: true },
+        "@angular/router": { eager: true, singleton: true },
+      }
 
     }),
-    sharedMappings.getPlugin(),
   ],
 };

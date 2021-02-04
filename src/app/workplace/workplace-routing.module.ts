@@ -4,7 +4,7 @@ import {TaskMasterComponent} from './task-master/task-master.component';
 
 const routes: Routes = [
   {
-    path: '**',
+    path: '',
     component: TaskMasterComponent
   }
 ];
