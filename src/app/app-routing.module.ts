@@ -6,6 +6,9 @@ const routes: Routes = [
     path: 'workplace',
     loadChildren: () =>
       import('./workplace/workplace.module').then((m) => m.WorkplaceModule)
+  },
+  {
+    path: '**', redirectTo: 'workplace'
   }
 ];
 
@@ -13,4 +16,5 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
-export class AppRoutingModule {}
+export class AppRoutingModule {
+}
