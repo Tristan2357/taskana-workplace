@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import {TaskMasterComponent} from './task-master/task-master.component';
+import { TaskMasterComponent } from './task-master/task-master.component';
 
 const routes: Routes = [
   {

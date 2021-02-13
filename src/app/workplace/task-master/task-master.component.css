@@ -1,0 +1,5 @@
+.divider {
+  border-right: 1px solid #ccc;
+  height: calc(100vh - 55px);
+  margin: 0 1rem;
+}

@@ -1,4 +1,5 @@
-import {Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { defineCustomElements } from 'taskana-workplace-lib';
 
 
 @Component({
@@ -8,9 +9,11 @@ import {Component, OnInit} from '@angular/core';
 })
 export class TaskMasterComponent implements OnInit {
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit(): void {
+    defineCustomElements();
   }
 
 }
