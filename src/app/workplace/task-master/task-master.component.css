@@ -1,5 +1,10 @@
-.divider {
+.divider-vert {
   border-right: 1px solid #ccc;
   height: calc(100vh - 55px);
   margin: 0 1rem;
+}
+
+.divider-hor {
+  border: 1px solid #ccc;
+  margin: 1rem 0;
 }

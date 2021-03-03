@@ -23,8 +23,7 @@ module.exports = {
       shared: {
         "@angular/core": { eager: true, singleton: true },
         "@angular/common": { eager: true, singleton: true },
-        "@angular/router": { eager: true, singleton: true },
-        "taskana-workplace-lib": {}
+        "@angular/router": { eager: true, singleton: true }
       }
     }),
   ],

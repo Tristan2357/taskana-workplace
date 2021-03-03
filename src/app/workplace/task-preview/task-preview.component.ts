@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { importCustomComponents } from '../../util/workplace-lib-importer';
 
 @Component({
-  selector: 'app-task-master',
-  templateUrl: './task-master.component.html',
-  styleUrls: ['./task-master.component.css']
+  selector: 'app-task-preview',
+  templateUrl: './task-preview.component.html',
+  styleUrls: ['./task-preview.component.css']
 })
-export class TaskMasterComponent implements OnInit {
+export class TaskPreviewComponent implements OnInit {
 
   ngOnInit(): void {
     importCustomComponents();

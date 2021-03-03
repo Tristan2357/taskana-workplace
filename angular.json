@@ -56,7 +56,7 @@
                   "maximumError": "4kb"
                 }
               ],
-              "extraWebpackConfig": "webpack.prod.config.js"
+              "extraWebpackConfig": "webpack.config.js"
             }
           }
         },
@@ -70,7 +70,7 @@
           "configurations": {
             "production": {
               "browserTarget": "taskana-workplace:build:production",
-              "extraWebpackConfig": "webpack.prod.config.js"
+              "extraWebpackConfig": "webpack.config.js"
             }
           }
         },
