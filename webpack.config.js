@@ -14,16 +14,15 @@ module.exports = {
   plugins: [
     new ModuleFederationPlugin({
       name: "mfeWorkplace",
-      library: { type: "var", name: "mfeWorkplace" },
+      library: {type: "var", name: "mfeWorkplace"},
       filename: "remoteEntry.js",
       exposes: {
         WorkplaceModule: ".//src/app/workplace/workplace.module.ts"
       },
-
       shared: {
-        "@angular/core": { eager: true, singleton: true },
-        "@angular/common": { eager: true, singleton: true },
-        "@angular/router": { eager: true, singleton: true }
+        "@angular/core": {eager: true, singleton: true},
+        "@angular/common": {eager: true, singleton: true},
+        "@angular/router": {eager: true, singleton: true}
       }
     }),
   ],

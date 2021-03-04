@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { importCustomComponents } from '../../util/workplace-lib-importer';
+import { importCustomComponents } from '../../../util/workplace-lib-importer';
 
 @Component({
   selector: 'app-task-open',
