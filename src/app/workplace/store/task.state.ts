@@ -1,4 +1,4 @@
-import { Action, NgxsAfterBootstrap, State, StateContext } from '@ngxs/store';
+import { Action, State, StateContext } from '@ngxs/store';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { Task } from '../models/task';
@@ -6,103 +6,97 @@ import {
   CancelClaim,
   ClaimTask,
   CompleteTask,
-  CreateTask,
   DeleteTask,
-  GetAllTasks,
-  GetTasksWithFilter,
+  GetTasks,
   SaveTask,
   SelectTask,
+  SetCreateTask,
   TransferTask
 } from './task.actions';
 import { TaskService } from '../services/task.service';
-import { take } from 'rxjs/operators';
+import { map, take, tap } from 'rxjs/operators';
+
 
 export interface TaskStateModel {
+  creating: boolean;
   selectedTask: Task;
   tasks: Task[];
 }
 
-class InitializeStore {
-  static readonly type = '[Task] Initializing state';
-}
-
 @Injectable()
-@State<TaskStateModel>({name: 'task'})
-export class TaskState implements NgxsAfterBootstrap {
+@State<TaskStateModel>({name: 'task', defaults: {creating: false, selectedTask: null, tasks: null}})
+export class TaskState {
 
   constructor(private taskService: TaskService) {
   }
 
-  @Action(InitializeStore)
-  initializeStore(ctx: StateContext<TaskStateModel>): Observable<any> {
-    this.taskService.getTasks({'sort-by': 'PRIORITY', order: 'DESCENDING'})
-      .pipe(take(1)).subscribe(r => console.log(r));
-    return of(null);
-  }
+  // TODO update tasks, after delete, update etc
 
-  // TODO merge with filter
-  @Action(GetAllTasks)
-  getAllTasks(ctx: StateContext<TaskStateModel>): Observable<any> {
-    this.taskService.getTasks();
-    return of(null);
-  }
-
-  @Action(GetTasksWithFilter)
-  getTasksWithFilter(ctx: StateContext<TaskStateModel>, action: GetTasksWithFilter): Observable<any> {
-    this.taskService.getTasks(action?.filter);
-    return of(null);
+  @Action(GetTasks)
+  getTasks(ctx: StateContext<TaskStateModel>, action: GetTasks): Observable<Task[]> {
+    return this.handleSubscribe(this.taskService.getTasks(action.filter).pipe(take(1),
+      map(taskResource => (taskResource.tasks as Task[])),
+      tap(tasks => ctx.patchState({tasks}))));
   }
 
   @Action(SelectTask)
   selectTask(ctx: StateContext<TaskStateModel>, action: SelectTask): Observable<any> {
-    this.taskService.getTaskById(action.taskId);
-    return of(null);
+    return this.handleSubscribe(this.taskService.getTaskById(action.taskId).pipe(take(1),
+      tap(selectedTask => ctx.patchState({selectedTask, creating: false})
+      )));
   }
 
   @Action(CompleteTask)
   completeTask(ctx: StateContext<TaskStateModel>): Observable<any> {
-    /*TODO state.selectedTask.taskId or in service subscribe to selectedTask*/
-    this.taskService.completeTask('');
-    return of(null);
+    return this.handleSubscribe(this.taskService.completeTask(ctx.getState().selectedTask.taskId).pipe(take(1),
+      tap(selectedTask => ctx.patchState({selectedTask}))));
   }
 
   @Action(SaveTask)
   saveTask(ctx: StateContext<TaskStateModel>, action: SaveTask): Observable<any> {
-    this.taskService.updateTask(action.task);
-    return of(null);
+    if (ctx.getState().creating) {
+      return this.handleSubscribe(this.taskService.createTask(action.task).pipe(take(1),
+        tap(selectedTask => ctx.patchState({selectedTask, creating: false}))));
+    } else {
+      return this.handleSubscribe(this.taskService.updateTask(action.task).pipe(take(1),
+        tap(selectedTask => ctx.patchState({selectedTask, creating: false}))));
+    }
   }
 
-  @Action(CreateTask)
-  createTask(ctx: StateContext<TaskStateModel>, action: CreateTask): Observable<any> {
-    this.taskService.createTask(action.task);
-    return of(null);
+  @Action(SetCreateTask)
+  createTask(ctx: StateContext<TaskStateModel>): Observable<void> {
+    ctx.patchState({selectedTask: new Task(), creating: true});
+    return of();
   }
 
   @Action(DeleteTask)
-  deleteTask(ctx: StateContext<TaskStateModel>, action: DeleteTask): Observable<any> {
-    /*TODO state.selectedTask.taskId or in service subscribe to selectedTask*/
-    this.taskService.deleteTask('');
-    return of(null);
+  deleteTask(ctx: StateContext<TaskStateModel>): Observable<any> {
+    return this.handleSubscribe(this.taskService.deleteTask(ctx.getState().selectedTask.taskId).pipe(take(1),
+      tap(() => ctx.patchState({selectedTask: null}))));
   }
 
   @Action(ClaimTask)
   claimTask(ctx: StateContext<TaskStateModel>): Observable<any> {
-    return of(null);
+    return this.handleSubscribe(this.taskService.claimTask(ctx.getState().selectedTask.taskId).pipe(take(1),
+      tap(selectedTask => ctx.patchState({selectedTask}))));
   }
 
   @Action(CancelClaim)
   cancelClaim(ctx: StateContext<TaskStateModel>): Observable<any> {
-    return of(null);
+    return this.handleSubscribe(this.taskService.cancelClaimTask(ctx.getState().selectedTask.taskId).pipe(take(1),
+      tap(selectedTask => ctx.patchState({selectedTask}))));
   }
 
   @Action(TransferTask)
-  transferTask(ctx: StateContext<TaskStateModel>): Observable<any> {
-    return of(null);
+  transferTask(ctx: StateContext<TaskStateModel>, action: TransferTask): Observable<any> {
+    return this.handleSubscribe(this.taskService.transferTask(ctx.getState().selectedTask.taskId, action.workbasketId).pipe(take(1),
+      tap(selectedTask => ctx.patchState({selectedTask}))));
   }
 
-
-  ngxsAfterBootstrap(ctx?: StateContext<any>): void {
-    ctx.dispatch(new InitializeStore());
+  handleSubscribe<T>(handle: Observable<T>): Observable<T> {
+    handle.pipe(take(1)).pipe(take(1)).subscribe({
+      error: error => alert(error.message)
+    });
+    return handle;
   }
-
 }

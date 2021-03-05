@@ -1,12 +1,15 @@
-<div style="display: flex; margin-top: 8px">
-  <div style="min-width: 500px; max-width: 500px">
-    <task-search></task-search>
-    <task-list></task-list>
-    <a routerLink="./taskdetail/TKI:000000000000000000000000000000000004" routerLinkActive="active">detail</a>
-    <a routerLink="./task/TKI:000000000000000000000000000000000004" routerLinkActive="active">open</a>
-
+<div style="display: flex; margin-top: 8px;">
+  <div
+    style="min-width: 500px; max-width: 500px; max-height: calc(100vh - 64px); display: flex; flex-direction: column">
+    <!--    TODO [workbaskets]-->
+    <task-search [workbaskets] (addTaskEvent)="handleAddTask()"
+                 (searchTasksEvent)="handleSearch($event)"></task-search>
+    <div style="height: 100%; overflow-y: scroll">
+      <task-list [tasks]="tasks$ | async" [selectedId]="(selectedTask$ | async )?.taskId"
+                 (selectedIdChange)="handleSelectChange($event)"></task-list>
+    </div>
   </div>
   <span class="divider-vert"></span>
-  <router-outlet >
+  <router-outlet>
   </router-outlet>
 </div>

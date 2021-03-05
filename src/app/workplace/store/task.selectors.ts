@@ -1,6 +1,6 @@
-import { Selector } from '@ngxs/store';
 import { Task } from '../models/task';
 import { TaskState, TaskStateModel } from './task.state';
+import { Selector } from '@ngxs/store';
 
 export class TaskSelectors {
 

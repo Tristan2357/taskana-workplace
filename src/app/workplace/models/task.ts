@@ -4,7 +4,7 @@ import { ClassificationSummary } from './classification-summary';
 
 export class Task {
   constructor(
-    public taskId: string,
+    public taskId?: string,
     public primaryObjRef: ObjectReference = new ObjectReference(),
     public workbasketSummary?: Workbasket,
     public classificationSummary?: ClassificationSummary,
@@ -25,8 +25,8 @@ export class Task {
     public read?: boolean,
     public transferred?: boolean,
     public priority?: number,
-    public customAttributes?: CustomAttribute[],
-    public callbackInfo?: CustomAttribute[],
+    public customAttributes: CustomAttribute[] = [],
+    public callbackInfo: CustomAttribute[] = [],
     public custom1?: string,
     public custom2?: string,
     public custom3?: string,

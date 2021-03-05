@@ -1,7 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { importCustomComponents } from '../../../util/workplace-lib-importer';
-import { Store } from '@ngxs/store';
-import { GetAllTasks, GetTasksWithFilter } from '../../store/task.actions';
+import { Select, Store } from '@ngxs/store';
+import { Observable, Subject } from 'rxjs';
+import { Task } from '../../models/task';
+import { TaskSelectors } from '../../store/task.selectors';
+import { GetTasks, SelectTask, SetCreateTask } from '../../store/task.actions';
+import Filter from '../../models/filter';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-task-master',
@@ -10,10 +15,30 @@ import { GetAllTasks, GetTasksWithFilter } from '../../store/task.actions';
 })
 export class TaskMainComponent implements OnInit {
 
-  constructor(private store: Store) {
+  @Select(TaskSelectors.tasks) tasks$: Observable<Task[]>;
+  @Select(TaskSelectors.selectedTask) selectedTask$: Observable<Task>;
+
+  destroy$ = new Subject<void>();
+
+  constructor(private store: Store, private router: Router, private activeRoute: ActivatedRoute) {
   }
 
   ngOnInit(): void {
     importCustomComponents();
+    this.store.dispatch(new GetTasks()); // TODO maybe remove this
+  }
+
+  handleSelectChange(event: CustomEvent<string>): void {
+    this.store.dispatch(new SelectTask(event.detail));
+    this.router.navigate([`./taskdetail/${event.detail}`], {relativeTo: this.activeRoute});
+  }
+
+  handleSearch(event: CustomEvent<Filter>): void {
+    this.store.dispatch(new GetTasks(event.detail));
+  }
+
+  handleAddTask(): void {
+    this.store.dispatch(new SetCreateTask());
+    this.router.navigate([`./taskdetail/new`], {relativeTo: this.activeRoute});
   }
 }

@@ -1,15 +1,10 @@
 import Filter from '../models/filter';
 import { Task } from '../models/task';
 
+export class GetTasks {
+  static readonly type = '[Task] Get a list of Tasks, that can be filtered';
 
-export class GetAllTasks {
-  static readonly type = '[Task] Get all Tasks';
-}
-
-export class GetTasksWithFilter {
-  static readonly type = '[Task] Filter the list of Tasks';
-
-  constructor(public filter: Filter) {
+  constructor(public filter?: Filter) {
   }
 }
 
@@ -31,11 +26,8 @@ export class SaveTask {
   }
 }
 
-export class CreateTask {
+export class SetCreateTask {
   static readonly type = '[Task] Create a new Task';
-
-  constructor(public task: Task) {
-  }
 }
 
 export class DeleteTask {
@@ -53,7 +45,7 @@ export class CancelClaim {
 export class TransferTask {
   static readonly type = '[Task] Transfer the selected Task to another Workbasket';
 
-  constructor() {
+  constructor(public workbasketId: string) {
   }
 }
 

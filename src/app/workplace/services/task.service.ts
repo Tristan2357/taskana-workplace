@@ -19,9 +19,11 @@ export class TaskService {
   getTasks(filter?: Filter): Observable<TaskResource> {
     let params = new HttpParams();
     if (filter) {
-      for (const key of Object.keys(filter)) {
-        params = params.append(key, filter[key]);
-      }
+      Object.keys(filter).forEach(key => {
+        if (typeof filter[key][0] !== 'undefined' && !!filter[key][0]) {
+          params = params.append(key, filter[key]);
+        }
+      });
     }
     return this.http.get<TaskResource>(this.url, {params});
   }
@@ -31,11 +33,11 @@ export class TaskService {
   }
 
   completeTask(taskId: string): Observable<Task> {
-    return this.http.get<Task>(`${this.url}/${taskId}/complete`);
+    return this.http.post<Task>(`${this.url}/${taskId}/complete`, '');
   }
 
   updateTask(task: Task): Observable<Task> {
-    return this.http.put<Task>(this.url, task);
+    return this.http.put<Task>(`${this.url}/${task.taskId}`, task);
   }
 
   createTask(task: Task): Observable<Task> {
@@ -44,5 +46,17 @@ export class TaskService {
 
   deleteTask(taskId: string): Observable<any> {
     return this.http.delete(`${this.url}/${taskId}`);
+  }
+
+  claimTask(taskId: string): Observable<Task> {
+    return this.http.post<Task>(`${this.url}/${taskId}/claim`, '');
+  }
+
+  cancelClaimTask(taskId: string): Observable<Task> {
+    return this.http.delete<Task>(`${this.url}/${taskId}/claim`);
+  }
+
+  transferTask(taskId: string, workbasketId: string): Observable<Task> {
+    return this.http.post<Task>(`${this.url}/${taskId}/transfer/${workbasketId}`, '');
   }
 }

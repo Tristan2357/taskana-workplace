@@ -4,15 +4,17 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NgxsModule } from '@ngxs/store';
 import { environment } from '../environments/environment';
-import { TaskState } from './workplace/store/task.state';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
+import { HttpClientInterceptorService } from './workplace/services/http-client-interceptor.service';
+
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [NgxsModule.forRoot([TaskState], {developmentMode: !environment.production}),
+  imports: [NgxsModule.forRoot([], {developmentMode: !environment.production}),
+    NgxsReduxDevtoolsPluginModule.forRoot(),
     BrowserModule,
-    AppRoutingModule,
-    HttpClientModule],
+    AppRoutingModule],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
