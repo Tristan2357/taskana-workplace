@@ -2,10 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { importCustomComponents } from '../../../util/workplace-lib-importer';
 import { Select, Store } from '@ngxs/store';
 import { TaskSelectors } from '../../store/task.selectors';
-import { Observable, Subject } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Task } from '../../models/task';
 import { CancelClaim, CompleteTask, TransferTask } from '../../store/task.actions';
 import { ActivatedRoute, Router } from '@angular/router';
+import { WorkbasketService } from '../../services/workbasket.service';
+import { Workbasket } from '../../models/workbasket';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-task-open',
@@ -15,14 +18,17 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class TaskOpenComponent implements OnInit {
 
   @Select(TaskSelectors.selectedTask) selectedTask$: Observable<Task>;
+  workbaskets: Workbasket[];
 
-  destroy$ = new Subject<void>();
-
-  constructor(private store: Store, private router: Router, private activeRoute: ActivatedRoute) {
+  constructor(private store: Store,
+              private router: Router,
+              private activeRoute: ActivatedRoute,
+              public workbasketService: WorkbasketService) {
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     importCustomComponents();
+    this.workbaskets = await this.workbasketService.getWorkbaskets();
   }
 
   handleTransferTask(event: CustomEvent<{ workbasketId: string }>): void {

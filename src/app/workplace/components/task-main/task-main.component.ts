@@ -1,12 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { importCustomComponents } from '../../../util/workplace-lib-importer';
 import { Select, Store } from '@ngxs/store';
-import { Observable, Subject } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Task } from '../../models/task';
 import { TaskSelectors } from '../../store/task.selectors';
 import { GetTasks, SelectTask, SetCreateTask } from '../../store/task.actions';
 import Filter from '../../models/filter';
 import { ActivatedRoute, Router } from '@angular/router';
+import { WorkbasketService } from '../../services/workbasket.service';
+import { Workbasket } from '../../models/workbasket';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-task-master',
@@ -18,14 +21,19 @@ export class TaskMainComponent implements OnInit {
   @Select(TaskSelectors.tasks) tasks$: Observable<Task[]>;
   @Select(TaskSelectors.selectedTask) selectedTask$: Observable<Task>;
 
-  destroy$ = new Subject<void>();
+  workbaskets: Workbasket[];
 
-  constructor(private store: Store, private router: Router, private activeRoute: ActivatedRoute) {
+  constructor(private store: Store,
+              private router: Router,
+              private activeRoute: ActivatedRoute,
+              public workbasketService: WorkbasketService) {
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     importCustomComponents();
     this.store.dispatch(new GetTasks()); // TODO maybe remove this
+    this.workbaskets = await this.workbasketService.getWorkbaskets();
+    console.log(this.workbaskets);
   }
 
   handleSelectChange(event: CustomEvent<string>): void {

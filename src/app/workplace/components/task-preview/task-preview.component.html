@@ -1,6 +1,5 @@
 <div style="width: calc(100vw - 566px);">
-  <!--TODO [classifications]-->
-  <task-preview [task]="selectedTask$ | async" (closeEvent)="handleClose()"
-                (deleteEvent)="handleDelete()" (openTaskEvent)="handleOpen()"
-                (saveEvent)="handleSave($event)"></task-preview>
+  <task-preview [task]="selectedTask$ | async" [classifications]="classifications"
+                (closeEvent)="handleClose()" (deleteEvent)="handleDelete()"
+                (openTaskEvent)="handleOpen()" (saveEvent)="handleSave($event)"></task-preview>
 </div>

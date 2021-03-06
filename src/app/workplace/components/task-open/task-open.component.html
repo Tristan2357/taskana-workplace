@@ -1,5 +1,6 @@
 <div style="width: calc(100% - 540px);">
-  <!--TODO [workbaskets]="workbaskets from http/workbasketservice"-->
-  <task-open-buttonbar [task]="selectedTask$| async" (backEvent)="handleBack()" (completeEvent)="handleCompleteTask()" (transferEvent)="handleTransferTask($event)"></task-open-buttonbar>
+  <task-open-buttonbar [task]="selectedTask$| async" [workbaskets]="workbaskets"
+                       (backEvent)="handleBack()" (completeEvent)="handleCompleteTask()"
+                       (transferEvent)="handleTransferTask($event)"></task-open-buttonbar>
   <task-open-description [task]="selectedTask$ | async"></task-open-description>
 </div>

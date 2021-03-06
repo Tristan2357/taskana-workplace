@@ -13,6 +13,6 @@ export class ClassificationService {
   }
 
   getClassifications(): Observable<{ classifications: ClassificationSummary[] }> {
-    return this.http.get<{ classifications: ClassificationSummary[] }>(`${environment.taskanaRestUrl}/api/v1/classifications`);
+    return this.http.get<{ classifications: ClassificationSummary[] }>(`${environment.taskanaRestUrl}/v1/classifications`);
   }
 }

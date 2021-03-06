@@ -1,8 +1,7 @@
 <div style="display: flex; margin-top: 8px;">
   <div
     style="min-width: 500px; max-width: 500px; max-height: calc(100vh - 64px); display: flex; flex-direction: column">
-    <!--    TODO [workbaskets]-->
-    <task-search [workbaskets] (addTaskEvent)="handleAddTask()"
+    <task-search [workbaskets]="workbaskets" (addTaskEvent)="handleAddTask()"
                  (searchTasksEvent)="handleSearch($event)"></task-search>
     <div style="height: 100%; overflow-y: scroll">
       <task-list [tasks]="tasks$ | async" [selectedId]="(selectedTask$ | async )?.taskId"

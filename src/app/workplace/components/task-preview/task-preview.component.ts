@@ -2,10 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { importCustomComponents } from '../../../util/workplace-lib-importer';
 import { Select, Store } from '@ngxs/store';
 import { TaskSelectors } from '../../store/task.selectors';
-import { Observable, Subject } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Task } from '../../models/task';
 import { CancelClaim, ClaimTask, DeleteTask, SaveTask } from '../../store/task.actions';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ClassificationService } from '../../services/classification.service';
+import { ClassificationSummary } from '../../models/classification-summary';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-task-preview',
@@ -15,14 +18,17 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class TaskPreviewComponent implements OnInit {
 
   @Select(TaskSelectors.selectedTask) selectedTask$: Observable<Task>;
+  classifications: ClassificationSummary[];
 
-  destroy$ = new Subject<void>();
-
-  constructor(private store: Store, private router: Router, private activeRoute: ActivatedRoute) {
+  constructor(private store: Store,
+              private router: Router,
+              private activeRoute: ActivatedRoute,
+              public classificationService: ClassificationService) {
   }
 
   ngOnInit(): void {
     importCustomComponents();
+    this.classificationService.getClassifications().pipe(take(1)).subscribe(classRes => this.classifications = classRes.classifications)
   }
 
   handleSave(event: CustomEvent<Task>): void {
