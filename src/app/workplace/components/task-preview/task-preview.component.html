@@ -1,5 +1,5 @@
-<div style="width: calc(100vw - 566px);">
-  <task-preview [task]="selectedTask$ | async" [classifications]="classifications"
-                (closeEvent)="handleClose()" (deleteEvent)="handleDelete()"
-                (openTaskEvent)="handleOpen()" (saveEvent)="handleSave($event)"></task-preview>
+<div style="width: calc(100vw - 566px); height: 100%; overflow-y: scroll; overflow-x: hidden">
+  <task-preview style="overflow-y: scroll;" [task]="selectedTask$ | async" [classifications]="classifications"
+                (close)="handleClose()" (deleteTask)="handleDelete()"
+                (openTask)="handleOpen()" (saveTask)="handleSave($event)"></task-preview>
 </div>

@@ -31,8 +31,8 @@ export class TaskOpenComponent implements OnInit {
     this.workbaskets = await this.workbasketService.getWorkbaskets();
   }
 
-  handleTransferTask(event: CustomEvent<{ workbasketId: string }>): void {
-    this.store.dispatch(new TransferTask(event.detail.workbasketId));
+  handleTransferTask(event: CustomEvent<string>): void {
+    this.store.dispatch(new TransferTask(event.detail));
   }
 
   handleCompleteTask(): void {

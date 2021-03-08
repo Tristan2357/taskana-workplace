@@ -8,7 +8,6 @@ import { CancelClaim, ClaimTask, DeleteTask, SaveTask } from '../../store/task.a
 import { ActivatedRoute, Router } from '@angular/router';
 import { ClassificationService } from '../../services/classification.service';
 import { ClassificationSummary } from '../../models/classification-summary';
-import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-task-preview',
@@ -26,9 +25,9 @@ export class TaskPreviewComponent implements OnInit {
               public classificationService: ClassificationService) {
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     importCustomComponents();
-    this.classificationService.getClassifications().pipe(take(1)).subscribe(classRes => this.classifications = classRes.classifications)
+    this.classifications = await this.classificationService.getClassifications();
   }
 
   handleSave(event: CustomEvent<Task>): void {

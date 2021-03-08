@@ -13,7 +13,6 @@ export class WorkbasketService {
   workbaskets: Workbasket[];
 
   constructor(private http: HttpClient) {
-    this.getWorkbaskets();
   }
 
   async getWorkbaskets(): Promise<Workbasket[]> {

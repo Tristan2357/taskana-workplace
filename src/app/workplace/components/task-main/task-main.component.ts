@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { importCustomComponents } from '../../../util/workplace-lib-importer';
 import { Select, Store } from '@ngxs/store';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { Task } from '../../models/task';
 import { TaskSelectors } from '../../store/task.selectors';
 import { GetTasks, SelectTask, SetCreateTask } from '../../store/task.actions';
@@ -23,6 +23,8 @@ export class TaskMainComponent implements OnInit {
 
   workbaskets: Workbasket[];
 
+  destroy$ = new Subject<void>();
+
   constructor(private store: Store,
               private router: Router,
               private activeRoute: ActivatedRoute,
@@ -31,9 +33,23 @@ export class TaskMainComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     importCustomComponents();
-    this.store.dispatch(new GetTasks()); // TODO maybe remove this
+    this.store.dispatch(new GetTasks());
+    if (this.activeRoute.firstChild) {
+      const childRoute = this.activeRoute.firstChild.snapshot;
+      this.store.dispatch(new SelectTask(childRoute.params.id)).pipe(take(1)).subscribe({
+        next: task => {
+          if (!task || typeof task === 'undefined') {
+            console.log('well its treason then');
+            this.navigateToMain();
+          }
+        }, error: () => this.navigateToMain()
+      });
+    }
     this.workbaskets = await this.workbasketService.getWorkbaskets();
-    console.log(this.workbaskets);
+  }
+
+  private navigateToMain(): void {
+    this.router.navigate(['./'], {relativeTo: this.activeRoute});
   }
 
   handleSelectChange(event: CustomEvent<string>): void {
